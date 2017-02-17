@@ -7,6 +7,67 @@ using System.Threading.Tasks;
 namespace TibcoLog
 {
     /// <summary>
+    /// cache to handel last X lines;
+    /// </summary>
+    class jobCache
+    {
+        int _size; //cache size
+        string[] lines; //cache
+        int index = -1; //index in cache - used to loop through lines
+        int fileRowNum = -1; //absolute index
+
+        public int size
+        {
+            get { return _size; }
+            set { _size = value; }
+        }
+
+        /// <summary>
+        /// add a new line to buffer
+        /// </summary>
+        /// <param name="line">text to add</param>
+        public void addRow(string line)
+        {
+            index = (index + 1) % size;
+            lines[index] = line;
+
+        }
+
+        /// <summary>
+        /// lowest availabel rownum in cache
+        /// </summary>
+        public int minAvail
+        {
+            get { return Math.Max(fileRowNum - size + 1, 0); }
+        }
+
+        /// <summary>
+        /// get string from cache indexed by absolute file index
+        /// </summary>
+        /// <param name="absoluteIndex">file row num. Starts from 0</param>
+        /// <returns></returns>
+        public string this[int absoluteIndex]
+        {
+            get {
+                 
+                if ((absoluteIndex > fileRowNum) || (absoluteIndex < minAvail))
+                    return null;
+
+                int idx = (absoluteIndex - minAvail + index + 1) % size;
+                return lines[idx];
+
+                 }
+        }
+
+
+        public jobCache(int cacheSize = 10000)
+        {
+            size = cacheSize;
+            lines = new string[size];
+        }
+    }
+
+    /// <summary>
     /// basic element - single chunk of job instance
     /// </summary>
     class jobPart

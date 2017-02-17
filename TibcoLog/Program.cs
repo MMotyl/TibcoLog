@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace TibcoLog
 {
@@ -45,7 +45,12 @@ namespace TibcoLog
                 Console.WriteLine("-f:nazwa pliku do przeszukania");
                 Console.WriteLine("-s:szukana fraza [nie regexp]");
             }
-            
+
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine("[E] wskazany plik nie istnieje");
+                ok = false;
+            }
         }
         
     }
