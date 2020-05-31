@@ -51,6 +51,9 @@ namespace TibcoLog
                 Console.WriteLine("[E] wskazany plik nie istnieje");
                 ok = false;
             }
+
+            LogParser ls = new LogParser(inputFile, searchString);
+
         }
         
     }
